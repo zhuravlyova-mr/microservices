@@ -1,0 +1,35 @@
+version: '3'
+services:
+
+  user:
+    container_name: user
+    build:
+      context: .
+    env_file:
+      - .development.env
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - 7000:7000
+    command: npm run listen #npm run start:dev
+    depends_on:
+      - postgres1
+    restart:
+      always
+  
+  postgres1:
+    container_name: postgres1
+    image: postgres:12
+    env_file:
+      - .development.env
+    environment:
+      PG_DATA: /var/lib/postgresql/data
+    ports:
+      - 5438:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+  
+volumes:
+  pgdata:            
